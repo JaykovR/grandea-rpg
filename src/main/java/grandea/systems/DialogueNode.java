@@ -12,6 +12,7 @@ public class DialogueNode {
      */
     public String mainDialogue2;
     boolean firstRun = true ;
+    public boolean test = false;
     public String confirm;
 
 

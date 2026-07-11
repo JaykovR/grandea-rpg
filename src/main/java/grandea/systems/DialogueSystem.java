@@ -6,6 +6,24 @@ import grandea.Main;
 
 public class DialogueSystem {
 
+    private int getValidInput(Scanner scanner, int maxOption){
+        while(true){
+            if(!scanner.hasNextInt()){
+                System.out.println("Invalid Input. Choose only a number between 1 and " + maxOption + ".");
+                scanner.next();
+                continue;
+            }
+
+            int selected = scanner.nextInt();
+
+            if(selected >= 1 && selected <= maxOption){
+                return selected;
+            }
+
+            System.out.println("Invalid Input. Choose only a number between 1 and " + maxOption + ".");
+        }
+    }
+
     public int dialogueOptions(DialogueNode dialogue){
         // uses main scanner
         Scanner scanner = Main.scanner;
@@ -13,29 +31,25 @@ public class DialogueSystem {
         // selected stores the player selection
         int selected;
 
+        // THIS SHOULD BE BASICALLY GOING BACK TO THE 4 OPTION DIALOGUE LOGIC
+        if(dialogue.test && !dialogue.firstRun && dialogue.confirm!= null){
+            selected = getValidInput(scanner, num_options);
+            // displays player selection
+            System.out.println("[DEBUG] SWITCH OFF");
+            dialogue.test = false;
+            displayChoice(dialogue, selected);
+
+            // returns player selection
+            return selected;
+
+        }
+
+
         // If its not the first run of this dialogue node, and there is a confirmation message
         // this means its a YES/NO message.
         if(!dialogue.firstRun && dialogue.confirm!= null){
             num_options = 2;
-            while(true){
-                // if the input is not a number or integer.
-                if(!scanner.hasNextInt()){
-                    System.out.println("Invalid Input. Choose only a number between 1 " + num_options + ".");
-                    scanner.next();
-                    continue;
-                }
-                selected = scanner.nextInt();
-
-                // if the input is not within the range of options which ranges from 1 to the num of options
-                if(selected < 1 || selected > num_options){
-                    System.out.println("Invalid Input. Choose only a number between 1 " + num_options + ".");
-                    continue;
-                }
-                else{
-                    dialogue.firstRun = false;
-                    break;
-                }
-            }
+            selected = getValidInput(scanner, num_options);
 
             // if the selected one is YES which is usually 1. Return the result.
             if (selected == 1){
@@ -43,11 +57,21 @@ public class DialogueSystem {
             }
             else{
                 // displays player selection
+                System.out.println("[DEBUG] SWITCH ON");
+                dialogue.test = true;
                 displayChoice(dialogue, selected);
                 // returns player selection
                 return selected;
             }
+        }
 
+        if(dialogue.mainDialogue2 != null && dialogue.firstRun && dialogue.confirm != null){
+            selected = getValidInput(scanner, num_options);
+            dialogue.firstRun = false;
+            // displays player selection
+            displayChoice(dialogue, selected);
+            // returns player selection
+            return selected;
         }
 
         /* IF it's the first time we have that dialogue, and it has a version where it doesn't show the
@@ -56,51 +80,15 @@ public class DialogueSystem {
          */
         if(dialogue.mainDialogue2 != null && dialogue.firstRun){
             int num_options_return = num_options - 1;
-            while(true){
-                // if the input is not a number or integer.
-                if(!scanner.hasNextInt()){
-                    System.out.println("Invalid Input. Choose only a number between 1 " + num_options_return + ".");
-                    scanner.next();
-                    continue;
-                }
-                selected = scanner.nextInt();
-
-                // if the input is not within the range of options which ranges from 1 to the num of options
-                if(selected < 1 || selected > num_options_return){
-                    System.out.println("Invalid Input. Choose only a number between 1 " + num_options_return + ".");
-                    continue;
-                }
-                else{
-                    dialogue.firstRun = false;
-                    break;
-                }
-            }
+            selected = getValidInput(scanner, num_options_return);
+            dialogue.firstRun = false;
             // displays player selection
             displayChoice(dialogue, selected);
             // returns player selection
             return selected;
-
         }
 
-        // normal logic
-        while(true){
-            // if the input is not a number or integer.
-            if(!scanner.hasNextInt()){
-                System.out.println("Invalid Input. Choose only a number between 1 " + num_options + ".");
-                scanner.next();
-                continue;
-            }
-            selected = scanner.nextInt();
-
-            // if the input is not within the range of options which ranges from 1 to the num of options
-            if(selected < 1 || selected > num_options){
-                System.out.println("Invalid Input. Choose only a number between 1 " + num_options + ".");
-                continue;
-            }
-            else{
-                break;
-            }
-        }
+        selected = getValidInput(scanner, num_options);
         // displays player selection
         displayChoice(dialogue, selected);
         // returns player selection
@@ -111,7 +99,11 @@ public class DialogueSystem {
     public void displayChoice(DialogueNode dialogue, int choice){
         // since the option list is an array that is indexed starting with 0 then I subtract -1
         // to get the desired result.
+        if(dialogue.test && !dialogue.firstRun && dialogue.confirm!= null){
+            System.out.println(dialogue.mainDialogue2);
+            dialogueOptions(dialogue);
 
+        }
 
         // IF Player selects the return option (which is always the last)
         if(choice == dialogue.options.size()){

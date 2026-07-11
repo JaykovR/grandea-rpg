@@ -113,20 +113,27 @@ public class Main {
                 "4. A card with various letter types, blue coloured.";
 
 
-        System.out.print(dialogueSystem.dialogueOptions(uniqueSkillChoice));
+        int uniqueSkill = (dialogueSystem.dialogueOptions(uniqueSkillChoice));
 
+        System.out.println("[DEBUG] YOU CHOSE:" + uniqueSkill);
 
-
-
-        switch (dialogueSystem.dialogueOptions(uniqueSkillChoice)) {
+        switch (uniqueSkill) {
             case 1:
                 System.out.println("So the Akashic Sight huh.");
+                player.uniqueSkill = "Akashic Sight";
+                break;
             case 2:
                 System.out.println("So the Divine Cognition huh.");
+                player.uniqueSkill = "Divine Cogition";
+                break;
             case 3:
                 System.out.println("So the Soul Confluence huh.");
+                player.uniqueSkill = "Soul Confluence";
+                break;
             case 4:
                 System.out.println("So the Omnilingualism huh.");
+                player.uniqueSkill = "Omnilingualism";
+                break;
 
 
 
