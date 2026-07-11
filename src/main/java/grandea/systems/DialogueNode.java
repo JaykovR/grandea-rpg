@@ -1,4 +1,4 @@
-package systems;
+package grandea.systems;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,7 @@ public class DialogueNode {
      */
     public String mainDialogue2;
     boolean firstRun = true ;
+    public String confirm;
 
 
 
